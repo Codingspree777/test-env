@@ -337,6 +337,82 @@ const resolvers = {
   },
 };
 
+//from UserForm.js//
+const ADD_USER = gql`
+  mutation addUser(
+    $text: String!
+    $name: String
+    $userName: String
+    $department: String
+    $access: String
+  ) {
+    addUser(
+      text: $text
+      name: $name
+      userName: $userName
+      department: $department
+      access: $access
+    ) @client {
+      id
+    }
+  }
+`;
+
+const UPDATE_USER = gql`
+  mutation updateUser(
+    $id: ID!
+    $text: String!
+    $name: String
+    $userName: String
+    $department: String
+    $access: String
+  ) {
+    updateUser(
+      id: $id
+      text: $text
+      name: $name
+      userName: $userName
+      department: $department
+      access: $access
+    ) @client {
+      id
+    }
+  }
+`;
+
+
+
+const UserForm = ({ userId, users, handelEditCard }) => {
+    const user = find(users, user => user.id === userId);
+    if (userId === null) {
+      return (
+        <Mutation mutation={ADD_USER}>
+          {addUser => (
+            <div>
+              <h1 className="title">Add User</h1>
+              <UserForm2 handleSubmit={addUser} />
+            </div>
+          )}
+        </Mutation>
+      );
+    }
+    return (
+      <Mutation mutation={UPDATE_USER}>
+        {updateUser => (
+          <div>
+            <h1 className="title">Update User</h1>
+            <UserUpdateForm
+              handleSubmit={updateUser}
+              user={user}
+              handelEditCard={handelEditCard}
+            />
+          </div>
+        )}
+      </Mutation>
+    );
+  };
+
+
 //from UserUpdateForm.js//
 class UserUpdateForm extends React.Component {
   constructor(props) {
@@ -425,82 +501,6 @@ class UserUpdateForm extends React.Component {
     );
   }
 }
-
-
-//from UserForm.js//
-const ADD_USER = gql`
-  mutation addUser(
-    $text: String!
-    $name: String
-    $userName: String
-    $department: String
-    $access: String
-  ) {
-    addUser(
-      text: $text
-      name: $name
-      userName: $userName
-      department: $department
-      access: $access
-    ) @client {
-      id
-    }
-  }
-`;
-
-const UPDATE_USER = gql`
-  mutation updateUser(
-    $id: ID!
-    $text: String!
-    $name: String
-    $userName: String
-    $department: String
-    $access: String
-  ) {
-    updateUser(
-      id: $id
-      text: $text
-      name: $name
-      userName: $userName
-      department: $department
-      access: $access
-    ) @client {
-      id
-    }
-  }
-`;
-
-
-const UserForm = ({ userId, users, handelEditCard }) => {
-    const user = find(users, user => user.id === userId);
-    if (userId === null) {
-      return (
-        <Mutation mutation={ADD_USER}>
-          {addUser => (
-            <div>
-              <h1 className="title">Add User</h1>
-              <UserForm handleSubmit={addUser} />
-            </div>
-          )}
-        </Mutation>
-      );
-    }
-    return (
-      <Mutation mutation={UPDATE_USER}>
-        {updateUser => (
-          <div>
-            <h1 className="title">Update User</h1>
-            <UserUpdateForm
-              handleSubmit={updateUser}
-              user={user}
-              handelEditCard={handelEditCard}
-            />
-          </div>
-        )}
-      </Mutation>
-    );
-  };
-
 
 // from UserList.js
 const getVisibleUsers = (users, filter) => {
