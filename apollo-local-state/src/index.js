@@ -53,7 +53,8 @@ const client = new ApolloClient({
   link: withClientState({ resolvers, defaults, cache, typeDefs}),
 });
 
-console.log(client.localState.cache.data.data);
+//console.log(client.localState.cache.data.data);
+console.log(resolvers)
 
 render(
   <ApolloProvider client={client}>

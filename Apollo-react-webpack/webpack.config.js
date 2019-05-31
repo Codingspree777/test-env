@@ -1,8 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  entry: './client/index.js',
-  //entry:'./root.index.js',
+  //entry: './client/index.js',
+  entry:'./root.index.js',
   mode: 'development',
   devServer: {
     publicPath: '/build/',
@@ -30,5 +30,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js'
+  },
+  node: {
+    fs: 'empty'
   }
 };

@@ -21,6 +21,7 @@ class UserForm extends React.Component {
   };
 
   render() {
+    console.log(this.props.handleSubmit)
     return (
       <div>
         <div className="field">

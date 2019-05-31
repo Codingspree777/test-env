@@ -9,9 +9,7 @@ import { Mutation } from 'react-apollo';
 import { find } from 'lodash';
 import {Query} from 'react-apollo';
 import {CSVLink} from 'react-csv';
-
-//import App from './components/App';
-//import { resolvers, defaults } from './resolvers';
+  
 
 // cache, Schema, and Apollo Store
 const cache = new InMemoryCache();

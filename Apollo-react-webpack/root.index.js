@@ -6,7 +6,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
 import "./App.css";
-import App from "./ApolloApp";
+// import App from "./client/components/App";
 
 //Apollo Aperture Cache
 const cache = new InMemoryCache();
@@ -49,7 +49,7 @@ const typeDefs = `
   }
 `;
 
-console.log(test);
+
 
 //Apollo Aperture Store
 const store = new ApolloClient({
