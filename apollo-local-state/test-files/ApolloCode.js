@@ -1,21 +1,29 @@
 
+// import 'cross-fetch/polyfill';
+// import ApolloClient from "apollo-boost/lib/index";
+// import { gql } from "apollo-boost";
+
 import { ApolloClient } from 'apollo-client';
 import { withClientState } from 'apollo-link-state';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
-
 import gql from 'graphql-tag';
-
- const defaults = {
+const defaults = {
   users: [],
-  visibilityFilter: 'SHOW_ALL',
+  visibilityFilter: 'SHOW_ALL'
 };
-
 let nextUserId = 0;
-
 const resolvers = {
   Mutation: {
-    addUser: (_, { text, name, userName, department, access }, { cache }) => {
+    addUser: (_, {
+      text,
+      name,
+      userName,
+      department,
+      access
+    }, {
+      cache
+    }) => {
       const query = gql`
         query GetUsers {
           users @client {
@@ -29,8 +37,9 @@ const resolvers = {
           }
         }
       `;
-
-      const previous = cache.readQuery({ query });
+      const previous = cache.readQuery({
+        query
+      });
       console.log('data', previous.users);
       const newUser = {
         id: nextUserId++,
@@ -40,13 +49,11 @@ const resolvers = {
         department,
         access,
         completed: false,
-        __typename: 'UserItem',
+        __typename: 'UserItem'
       };
       const data = {
-        users: previous.users.concat([newUser]),
-      };
-
-      // if (
+        users: previous.users.concat([newUser])
+      }; // if (
       //   name === '' ||
       //   userName === '' ||
       //   department === '' ||
@@ -54,18 +61,20 @@ const resolvers = {
       // ) {
       //   alert('all field is required');
       // } else {
-        // user Name Validation
-        const validation = previous.users.find(
-          user => user.userName === userName,
-        );
-        // if (validation === undefined) {
-          cache.writeData({ data });
-          return newUser;
-      //   }
+      // user Name Validation
+
+      const validation = previous.users.find(user => user.userName === userName); // if (validation === undefined) {
+
+      cache.writeData({
+        data
+      });
+      return newUser; //   }
       //   alert('user name is already in use');
       // // }
     },
-    updateUser: (_, variables, { cache }) => {
+    updateUser: (_, variables, {
+      cache
+    }) => {
       const query = gql`
         query GetUsers {
           users @client {
@@ -80,20 +89,29 @@ const resolvers = {
         }
       `;
       const id = `UserItem:${variables.id}`;
-      const previous = cache.readQuery({ query });
-      // user Name Validation
+      const previous = cache.readQuery({
+        query
+      }); // user Name Validation
+
       const validation = previous.users.find(user => {
         user.userName === variables.userName;
       });
+
       if (validation === undefined) {
-        const data = { ...variables };
-        cache.writeData({ id, data });
+        const data = { ...variables
+        };
+        cache.writeData({
+          id,
+          data
+        });
         return null;
       }
+
       alert('user name is already in use');
     },
-
-    deleteUser: (_, variables, { cache }) => {
+    deleteUser: (_, variables, {
+      cache
+    }) => {
       const query = gql`
         query Users {
           users @client {
@@ -108,29 +126,41 @@ const resolvers = {
         }
       `;
       console.log('variable', variables);
-      const previous = cache.readQuery({ query });
+      const previous = cache.readQuery({
+        query
+      });
       const data = {
-        users: previous.users.filter(user => user.id !== variables.id),
+        users: previous.users.filter(user => user.id !== variables.id)
       };
-      cache.writeData({ data });
+      cache.writeData({
+        data
+      });
       return data;
     },
-
-    toggleUser: (_, variables, { cache }) => {
+    toggleUser: (_, variables, {
+      cache
+    }) => {
       const id = `UserItem:${variables.id}`;
       const fragment = gql`
         fragment completeUser on UserItem {
           completed
         }
       `;
-      const user = cache.readFragment({ fragment, id });
-      const data = { ...user, completed: !user.completed };
-      cache.writeData({ id, data });
+      const user = cache.readFragment({
+        fragment,
+        id
+      });
+      const data = { ...user,
+        completed: !user.completed
+      };
+      cache.writeData({
+        id,
+        data
+      });
       return null;
-    },
-  },
+    }
+  }
 };
-
 const cache = new InMemoryCache();
 const typeDefs = `
   type User {
@@ -174,9 +204,9 @@ const client = new ApolloClient({
   link: withClientState({
     cache,
     typeDefs,
-    resolvers,
+    resolvers
   })
 }); 
 
 
-
+module.exports = client
